@@ -17,7 +17,7 @@ fun main() {
             break
         }
 
-        current.nextPosibleSteps().forEach { successor ->
+        current.nextPossibleSteps().forEach { successor ->
             if (!closeList.contains(successor)) {
                 closeList.add(successor)
                 openList.add(successor)

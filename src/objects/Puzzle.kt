@@ -19,7 +19,7 @@ class Puzzle(
         } + "\n"
     }
 
-    fun nextPosibleSteps(): List<Puzzle> {
+    fun nextPossibleSteps(): List<Puzzle> {
         val zeroIndex = matrix.indexOf(0)
 
         return listOfNotNull(
