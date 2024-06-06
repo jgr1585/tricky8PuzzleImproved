@@ -1,23 +1,23 @@
 package objects
 
+import helpers.moveRandom
+
 class Puzzle(
-    private val matrix: IntArray = IntArray(9) { it + 1 }.apply {
-        this[8] = 0
-        shuffle()
-    }
+    val matrix: IntArray,
+    val parent: Puzzle? = null,
+    val depth: Int = 0,
 ) {
+
+    constructor(shuffleCount: Int) : this(IntArray(9) { it + 1 }.apply {
+        this[8] = 0 // Set last element to 0 instead of 9
+        repeat(shuffleCount) {
+            moveRandom() // Shuffle 100 times
+        }
+    })
 
 
     val isSolved: Boolean
         get() = matrix.contentEquals(intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 0))
-
-    fun getMatrixAsString(): String {
-        return (0..<3).joinToString("\n") { i ->
-            (0..<3).joinToString(" ") { j ->
-                matrix[i * 3 + j].toString()
-            }
-        } + "\n"
-    }
 
     fun nextPossibleSteps(): List<Puzzle> {
         val zeroIndex = matrix.indexOf(0)
@@ -32,10 +32,16 @@ class Puzzle(
             }
     }
 
+    fun printBoard() {
+        for (i in matrix.indices step 3) {
+            println(matrix.slice(i..(i + 2)).joinToString(" "))
+        }
+    }
+
     private fun swapPeaces(i: Int, j: Int): Puzzle {
         return Puzzle(matrix.clone().apply {
-            this[i] = this[j].also { this[j] = this[i] }
-        })
+            this[i] = this[j].also { this[j] = this[i] } // Swap values of clone
+        }, this, depth + 1)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -50,6 +56,4 @@ class Puzzle(
     override fun hashCode(): Int {
         return matrix.contentHashCode()
     }
-
-
 }
