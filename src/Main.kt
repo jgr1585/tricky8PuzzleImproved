@@ -24,11 +24,11 @@ fun main() {
             greedySearchH2s[i] = greedySearch(puzzle, ::heuristicH2)
         }
 
-        val iterativeDeepSearch = iterativeDeepSearchs.map { it.nodesVisited }.average()
-        val aStarSearchH1 = aStarSearchH1s.map { it.nodesVisited }.average()
-        val aStarSearchH2 = aStarSearchH2s.map { it.nodesVisited }.average()
-        val greedySearchH1 = greedySearchH1s.map { it.nodesVisited }.average()
-        val greedySearchH2 = greedySearchH2s.map { it.nodesVisited }.average()
+        val iterativeDeepSearch = String.format("%.2f", iterativeDeepSearchs.map { it.nodesVisited }.average())
+        val aStarSearchH1 = String.format("%.2f", aStarSearchH1s.map { it.nodesVisited }.average())
+        val aStarSearchH2 = String.format("%.2f", aStarSearchH2s.map { it.nodesVisited }.average())
+        val greedySearchH1 = String.format("%.2f", greedySearchH1s.map { it.nodesVisited }.average())
+        val greedySearchH2 = String.format("%.2f", greedySearchH2s.map { it.nodesVisited }.average())
 
         println("$depth\t$iterativeDeepSearch\t$aStarSearchH1\t$aStarSearchH2\t$greedySearchH1\t$greedySearchH2")
     }
