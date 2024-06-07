@@ -16,8 +16,9 @@ fun depthLimitedSearch(state: Puzzle, limit: Int, nodesVisited: Int = 0): AlgoSt
     if (state.isSolved) { return AlgoStats(state, nodesVisited) }
     if (state.depth >= limit) { return AlgoStats(null, nodesVisited) }
 
+    var result = AlgoStats(null, nodesVisited)
     for (successor in state.nextPossibleSteps()) {
-        val result = depthLimitedSearch(successor, limit, nodesVisited + 1)
+        result = depthLimitedSearch(successor, limit, result.nodesVisited + 1)
         if (result.result != null) { return result }
     }
 

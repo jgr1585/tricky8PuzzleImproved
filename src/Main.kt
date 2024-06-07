@@ -1,58 +1,36 @@
 import algorithms.*
-import objects.Algo
-import objects.AlgoResults
+import objects.AlgoStats
 import objects.Puzzle
 
 fun main() {
     val instances = 100
     val depths = listOf(2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24)
 
-    val results = mutableListOf<AlgoResults>()
-
-    for (depth in depths) {
-        val puzzle = Puzzle(depth)
-
-        results.add(AlgoResults(
-            Algo.ITERATIVE_DEEP_SEARCH,
-            depth,
-            iterativeDeepSearch(puzzle, depth)
-
-        ))
-
-        results.add(AlgoResults(
-            Algo.A_STAR_SEARCH_H1,
-            depth,
-            aStarSearch(puzzle, ::heuristicH1)
-        ))
-
-        results.add(AlgoResults(
-            Algo.A_STAR_SEARCH_H2,
-            depth,
-            aStarSearch(puzzle, ::heuristicH2)
-        ))
-
-        results.add(AlgoResults(
-            Algo.GREEDY_SEARCH_H1,
-            depth,
-            greedySearch(puzzle, ::heuristicH1)
-        ))
-
-        results.add(AlgoResults(
-            Algo.GREEDY_SEARCH_H2,
-            depth,
-            greedySearch(puzzle, ::heuristicH2)
-        ))
-    }
-
     println("Depth\tIterative Deep Search\tA* Search H1\tA* Search H2\tGreedy Search H1\tGreedy Search H2")
     for (depth in depths) {
-        val iterativeDeepSearch = results.find { it.depth == depth && it.algo == Algo.ITERATIVE_DEEP_SEARCH }!!.stats
-        val aStarSearchH1 = results.find { it.depth == depth && it.algo == Algo.A_STAR_SEARCH_H1 }!!.stats
-        val aStarSearchH2 = results.find { it.depth == depth && it.algo == Algo.A_STAR_SEARCH_H2 }!!.stats
-        val greedySearchH1 = results.find { it.depth == depth && it.algo == Algo.GREEDY_SEARCH_H1 }!!.stats
-        val greedySearchH2 = results.find { it.depth == depth && it.algo == Algo.GREEDY_SEARCH_H2 }!!.stats
+        val iterativeDeepSearchs = MutableList(instances) { AlgoStats(null, 0) }
+        val aStarSearchH1s = MutableList(instances) { AlgoStats(null, 0) }
+        val aStarSearchH2s = MutableList(instances) { AlgoStats(null, 0) }
+        val greedySearchH1s = MutableList(instances) { AlgoStats(null, 0) }
+        val greedySearchH2s = MutableList(instances) { AlgoStats(null, 0) }
 
-        println("$depth\t${iterativeDeepSearch.nodesVisited}\t${aStarSearchH1.nodesVisited}\t${aStarSearchH2.nodesVisited}\t${greedySearchH1.nodesVisited}\t${greedySearchH2.nodesVisited}")
+        for (i in 0..<instances) {
+            val puzzle = Puzzle(depth)
+
+            iterativeDeepSearchs[i] = iterativeDeepSearch(puzzle, depth)
+            aStarSearchH1s[i] = aStarSearch(puzzle, ::heuristicH1)
+            aStarSearchH2s[i] = aStarSearch(puzzle, ::heuristicH2)
+            greedySearchH1s[i] = greedySearch(puzzle, ::heuristicH1)
+            greedySearchH2s[i] = greedySearch(puzzle, ::heuristicH2)
+        }
+
+        val iterativeDeepSearch = iterativeDeepSearchs.map { it.nodesVisited }.average()
+        val aStarSearchH1 = aStarSearchH1s.map { it.nodesVisited }.average()
+        val aStarSearchH2 = aStarSearchH2s.map { it.nodesVisited }.average()
+        val greedySearchH1 = greedySearchH1s.map { it.nodesVisited }.average()
+        val greedySearchH2 = greedySearchH2s.map { it.nodesVisited }.average()
+
+        println("$depth\t$iterativeDeepSearch\t$aStarSearchH1\t$aStarSearchH2\t$greedySearchH1\t$greedySearchH2")
     }
 
 
