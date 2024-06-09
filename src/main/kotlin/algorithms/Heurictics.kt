@@ -22,5 +22,6 @@ fun heuristicH2(state: Puzzle): Int {
 fun heuristicH3(state: Puzzle): Int {
     return state.matrix
         .withIndex()
-        .count { (index, value) -> value != 0 && value != index + 1 }
+        .map { (index, value) -> if (value != 0 && value != index + 1) 1 else 0 }
+        .sum()
 }
