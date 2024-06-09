@@ -14,11 +14,21 @@ suspend fun main() {
 
 
     table {
-        header("Depth", "Iterative Deep Search", "A* Search H1", "A* Search H2", "A* Search H3", "Greedy Search H1", "Greedy Search H2", "Greedy Search H3")
+        header(
+            "Depth",
+            "Iterative Deep Search",
+            "A* Search H1",
+            "A* Search H2",
+            "A* Search H3",
+            "Greedy Search H1",
+            "Greedy Search H2",
+            "Greedy Search H3",
+            "Uniform Cost Search"
+        )
 
         hints {
             borderStyle = Table.BorderStyle.SINGLE_LINE
-            (1..8).forEach { precision(it, 2) } // Set all columns to have 2 decimal places
+            (1..9).forEach { precision(it, 2) } // Set all columns to have 2 decimal places
         }
 
         for (depth in depths) {
@@ -31,6 +41,7 @@ suspend fun main() {
             val greedySearchH1s = MutableList(instances) { AlgoStats(null, 0) }
             val greedySearchH2s = MutableList(instances) { AlgoStats(null, 0) }
             val greedySearchH3s = MutableList(instances) { AlgoStats(null, 0) }
+            val uniformCostSearches = MutableList(instances) { AlgoStats(null, 0) }
 
             // Launch multiple coroutines to run the algorithms in parallel
             runBlocking {
@@ -45,6 +56,7 @@ suspend fun main() {
                         thread { greedySearchH1s[i] = greedySearch(puzzle, ::heuristicH1) }
                         thread { greedySearchH2s[i] = greedySearch(puzzle, ::heuristicH2) }
                         thread { greedySearchH3s[i] = greedySearch(puzzle, ::heuristicH3) }
+                        thread { uniformCostSearches[i] = uniformCostSearch(puzzle) }
                     }
                 }
 
@@ -60,7 +72,8 @@ suspend fun main() {
                 aStarSearchH3s.map { it.nodesVisited }.average(),
                 greedySearchH1s.map { it.nodesVisited }.average(),
                 greedySearchH2s.map { it.nodesVisited }.average(),
-                greedySearchH3s.map { it.nodesVisited }.average()
+                greedySearchH3s.map { it.nodesVisited }.average(),
+                uniformCostSearches.map { it.nodesVisited }.average()
             )
         }
     }.render(StringBuilder()).toString().let(::println)
